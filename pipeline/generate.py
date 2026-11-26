@@ -33,7 +33,8 @@ import re
 import shutil
 import subprocess
 import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -41,7 +42,7 @@ SENTENCE_FILE = ROOT / "input" / "script.md"
 STATE_FILE = ROOT / "pipeline" / "state.json"
 CONTENT_DIR = ROOT / "content" / "posts"
 
-KST = timezone(timedelta(hours=9))
+CHICAGO = ZoneInfo("America/Chicago")
 
 # ============================== 도메인 설정 =================================
 # 이 블록만 새 프로젝트 주제에 맞게 교체한다. 아래 엔진 코드는 건드릴 필요 없다.
@@ -452,7 +453,7 @@ def main() -> int:
         return 1
 
     model = os.environ.get("CLAUDE_MODEL", "claude-haiku-5-5")
-    today = datetime.now(KST).date()
+    today = datetime.now(CHICAGO).date()
     sentences = read_sentences()
     queue = build_queue(sentences, today)
     if sentences:
@@ -494,7 +495,7 @@ def main() -> int:
             failed += 1
             continue
 
-        now = datetime.now(KST)
+        now = datetime.now(CHICAGO)
         log(f"  → {result['title']}")
 
         if args.dry_run:
