@@ -191,8 +191,15 @@ def read_sentences() -> list[str]:
     scripts = []
     for chunk in re.split(r"^\s*---+\s*$", body, flags=re.MULTILINE):
         chunk = chunk.strip()
-        if chunk and not chunk.startswith("<!--"):
-            scripts.append(chunk)
+        if not chunk or chunk.startswith("<!--"):
+            continue
+        # Header-only chunks (template placeholders with no transcript) count as empty,
+        # so a blank Book:/Pages read: block falls back to the idiom lesson instead
+        # of failing as an empty session.
+        body_lines = [ln for ln in chunk.splitlines() if not re.match(r"^\s*(Book|Pages read)\s*:", ln)]
+        if not "".join(body_lines).strip():
+            continue
+        scripts.append(chunk)
     return scripts
 
 
