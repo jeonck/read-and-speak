@@ -13,7 +13,7 @@ Site: https://jeonck.github.io/read-and-speak/
 ```
 input/script.md (paste the session transcript in the code block, edit on GitHub web UI)
         │
-        ▼  saving (committing) triggers the push hook immediately + daily 07:00 Chicago time cron
+        ▼  saving (committing) triggers the push hook immediately (no schedule — runs only when you save a session)
 pipeline/generate.py
   - reads the whole code block as ONE session (`---` line separates several sessions)
   - skips sessions already published (hash dedup, tracked in pipeline/state.json)
@@ -48,7 +48,7 @@ Hugo build → GitHub Pages deploy
 When everything publishes successfully, the pipeline clears the code block in its
 commit — next time, just paste the new transcript. (If only part of it fails, the
 input stays put so you can retry.) An already-published session is never re-posted
-(text-hash dedup). You can also run it manually: Actions tab → "Read & Speak Daily"
+(text-hash dedup). You can also run it manually: Actions tab → "Read & Speak"
 → "Run workflow".
 
 ## A session, step by step
@@ -74,17 +74,16 @@ input stays put so you can retry.) An already-published session is never re-post
 
 ## Days with no session — idiom mini lesson
 
-If the code block is empty, the daily 07:00 Chicago time cron picks a
+If you run the workflow manually with an empty code block, it picks a
 classic English idiom from `FALLBACK_QUOTES` in `pipeline/generate.py` and publishes
-a mini lesson, so the site never goes silent. Emptying the pool
+a mini lesson. Emptying the pool
 (`FALLBACK_QUOTES = []`) turns this off.
 
-## Cron note
+## No schedule
 
-The template this site was built from runs its daily cron at 07:00 KST. This site
-instead runs at **07:00 Chicago time — 13:00 UTC** (`0 13 * * *` in
-`.github/workflows/daily.yml`). Note: 13:00 UTC is 07:00 during standard time (CST)
-and 08:00 during daylight time (CDT), because the cron is fixed to UTC.
+This site has **no cron**. It runs only when you save a session (push hook) or run
+the workflow manually. The template this site was built from had a daily cron; it
+was removed because this is a reading log — it runs when you read, not every day.
 
 ## First-time setup (once, done by a person)
 
@@ -116,8 +115,8 @@ confirm it works.
 | `pipeline/generate.py` | transcript analysis → Hugo post. Domain settings are in the "도메인 설정" block at the top |
 | `pipeline/state.json` | hashes of published sessions (prevents duplicates) |
 | `content/posts/` | generated study posts |
-| `.github/workflows/daily.yml` | push hook + daily 07:00 Chicago time generate/deploy workflow |
-| `themes/PaperMod` | Hugo theme (git submodule) |
+| `.github/workflows/daily.yml` | push hook + manual generate/deploy workflow (no schedule) |
+| `themes/PaperMod` | Hugo theme (vendored as regular files) |
 | `assets/css/extended/cards.css` | card-grid layout + PaperMod spacing fix |
 | `static/CNAME` | (optional) for a custom domain |
 
