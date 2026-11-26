@@ -22,7 +22,7 @@ Env:
     CLAUDE_CODE_OAUTH_TOKEN  claude-code 백엔드 CI 인증 (claude setup-token으로 발급,
                              로컬은 claude 로그인 세션 사용)
     ANTHROPIC_API_KEY        api 백엔드 필수
-    CLAUDE_MODEL             생성 모델 (기본 claude-sonnet-4-6)
+    CLAUDE_MODEL             생성 모델 (기본 claude-haiku-5-5)
 """
 
 import argparse
@@ -451,7 +451,7 @@ def main() -> int:
         log(f"오류: 알 수 없는 JUDGE_BACKEND={backend!r} (claude-code | api)")
         return 1
 
-    model = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-6")
+    model = os.environ.get("CLAUDE_MODEL", "claude-haiku-5-5")
     today = datetime.now(KST).date()
     sentences = read_sentences()
     queue = build_queue(sentences, today)
