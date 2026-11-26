@@ -1,4 +1,4 @@
-baseURL = 'https://jeonck.github.io/read-and-speak/'
+baseURL = 'https://readandspeak.metacog.co.kr/'
 locale = 'en-us'
 title = 'Read & Speak'
 

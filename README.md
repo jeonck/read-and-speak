@@ -6,7 +6,7 @@ and publishes a study post: good sentences, native-speaker corrections of mistak
 (Say It Better), idioms, vocabulary, a fill-in-the-blank quiz, and a mini diary.
 Sessions accumulate as a reviewable history.
 
-Site: https://jeonck.github.io/read-and-speak/
+Site: https://readandspeak.metacog.co.kr/
 
 ## How it works
 
