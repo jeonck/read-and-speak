@@ -1,0 +1,237 @@
+/* WeWork-inspired layer for Read & Speak.
+   Design cues borrowed: monochrome palette, oversized tight headlines,
+   generous whitespace, flat bordered cards, black pill buttons, small
+   uppercase eyebrow labels. Only the *style language* is borrowed — no
+   WeWork logos, fonts or assets.
+   Concatenated after modern.css (alphabetical), so it wins at equal specificity. */
+
+/* ---- Palette: black & white, no colored accent ---- */
+:root {
+  --accent: #000000;
+  --accent-hover: #333333;
+  --on-accent: #ffffff;
+  --theme: #ffffff;
+  --entry: #ffffff;
+  --primary: #000000;
+  --secondary: #6b6b6b;
+  --tertiary: #000000;
+  --content: #1a1a1a;
+  --code-bg: #f4f4f2;
+  --border: #e3e3e0;
+  --radius: 4px;
+  --shadow-sm: none;
+  --shadow-md: none;
+}
+
+:root[data-theme="dark"] {
+  --accent: #ffffff;
+  --accent-hover: #cccccc;
+  --on-accent: #000000;
+  --theme: #000000;
+  --entry: #0d0d0d;
+  --primary: #ffffff;
+  --secondary: #a3a3a3;
+  --tertiary: #ffffff;
+  --content: #ededed;
+  --code-bg: #161616;
+  --border: #2a2a2a;
+  --shadow-sm: none;
+  --shadow-md: none;
+}
+
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+:root[data-theme="dark"] ::selection {
+  background: #fff;
+  color: #000;
+}
+
+/* ---- Typography: big, tight, confident ---- */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+
+.post-title,
+.post-single .post-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.post-content h2 {
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.5rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.035em;
+}
+
+/* Small uppercase "eyebrow" labels */
+.post-meta,
+.entry-footer,
+.breadcrumbs,
+.footer {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.post-meta .post-tags a,
+.post-tags a {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ---- Header ---- */
+.header {
+  border-bottom: 2px solid var(--primary);
+}
+
+.logo a {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+#menu a {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#menu a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+/* Primary action: black pill, flat (no shadow, no lift) */
+#menu a[href*="input/script.md"] {
+  background: var(--primary);
+  color: var(--theme);
+  border-radius: 999px;
+  padding: 0.5rem 1.15rem;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+#menu a[href*="input/script.md"]:hover {
+  background: var(--accent-hover);
+  color: var(--theme);
+  transform: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+/* ---- Home hero ---- */
+.first-entry .entry-header h1 {
+  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.first-entry .entry-content p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  max-width: 34rem;
+  color: var(--secondary);
+}
+
+.first-entry {
+  padding-top: 2.5rem;
+  padding-bottom: 2rem;
+}
+
+/* ---- Cards: flat, square-ish, black outline on hover ---- */
+.post-entry {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: none;
+  padding: 1.5rem;
+}
+
+.post-entry:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--primary);
+}
+
+.post-entry .entry-header h2 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.post-entry .entry-content {
+  color: var(--secondary);
+}
+
+/* Arrow affordance on card hover, WeWork-style */
+.post-entry .entry-footer::after {
+  content: " →";
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+
+.post-entry:hover .entry-footer::after {
+  opacity: 1;
+}
+
+/* ---- Post body ---- */
+.post-content a {
+  color: var(--primary);
+  text-decoration-thickness: 2px;
+}
+
+.post-content a:hover {
+  color: var(--accent-hover);
+}
+
+.post-content blockquote {
+  border-left: 4px solid var(--primary);
+  border-radius: 0;
+  background: var(--code-bg);
+}
+
+/* Quiz toggles: flat boxes, black edge when open */
+.post-content details {
+  border-radius: var(--radius);
+}
+
+.post-content details[open] {
+  border-color: var(--primary);
+  box-shadow: none;
+}
+
+.post-content details summary:hover {
+  color: var(--primary);
+}
+
+/* ---- Focus ring: strong and visible ---- */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- Footer ---- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 767px) {
+  .first-entry {
+    padding-top: 1.5rem;
+  }
+
+  .post-entry {
+    padding: 1.15rem;
+  }
+}

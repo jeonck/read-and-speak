@@ -7,7 +7,7 @@ paginate = 10
 [params]
   env = 'production'
   title = 'Read & Speak'
-  description = 'Read a book, talk about it, and get better at English — one session at a time.'
+  description = 'Read for 30 minutes, say it out loud, and get the English right — one session at a time.'
   author = 'jeonck'
   defaultTheme = 'auto'
   disableThemeToggle = false
@@ -28,8 +28,8 @@ paginate = 10
   tocopen = false
 
   [params.homeInfoParams]
-    Title = 'Read & Speak'
-    Content = 'Book reading and speaking practice, reviewed session by session.'
+    Title = 'Read it. Say it. Say it better.'
+    Content = 'Every reading session, turned into a study post: your best sentences, natural corrections, and a quick quiz.'
 
   [[params.socialIcons]]
     name = 'github'
@@ -38,17 +38,17 @@ paginate = 10
 [menu]
   [[menu.main]]
     identifier = 'input'
-    name = 'Add Session Transcript ✏️'
+    name = 'Add a session'
     url = 'https://github.com/jeonck/read-and-speak/edit/main/input/script.md'
     weight = 5
   [[menu.main]]
     identifier = 'posts'
-    name = 'Posts'
+    name = 'Sessions'
     url = '/posts/'
     weight = 10
   [[menu.main]]
     identifier = 'tags'
-    name = 'Tags'
+    name = 'Topics'
     url = '/tags/'
     weight = 20
   [[menu.main]]

@@ -31,7 +31,7 @@ Hugo build → GitHub Pages deploy
 ## How to use
 
 1. Open [`input/script.md`](input/script.md) in the repo.
-   (The "Add Session Transcript ✏️" button in the site menu links straight here.)
+   (The "Add a session" button in the site menu links straight here.)
 2. Click the pencil (✏️) icon to edit.
 3. At the top of the code block, write the book info, then paste the transcript:
    ```
