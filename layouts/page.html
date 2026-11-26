@@ -1,0 +1,35 @@
+{{ define "main" }}
+<article class="post" id="top">
+  <header class="post-head">
+    <p class="eyebrow">
+      <a href="{{ "posts/" | relURL }}">Sessions</a> /
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      · {{ .ReadingTime }} min read
+    </p>
+    <h1>{{ .Title | replaceRE `^\d{4}-\d{2}-\d{2}\s+` "" }}</h1>
+    {{ with .Params.tags }}
+    <div class="chips">{{ range . }}<a class="chip" href="{{ printf "tags/%s/" (. | urlize) | relURL }}">{{ . }}</a>{{ end }}</div>
+    {{ end }}
+    {{ with .Fragments.Headings }}
+    <nav class="jump" aria-label="In this session">
+      <span>Jump to</span>
+      {{ range . }}
+        {{ if .Title }}<a href="#{{ .ID }}">{{ .Title | plainify }}</a>{{ end }}
+        {{ range .Headings }}<a href="#{{ .ID }}">{{ .Title | plainify }}</a>{{ end }}
+      {{ end }}
+    </nav>
+    {{ end }}
+  </header>
+
+  <div class="prose">{{ .Content }}</div>
+
+  <nav class="pager" aria-label="More sessions">
+    {{ with .PrevInSection }}<a class="pager-link" href="{{ .RelPermalink }}"><span>← Older</span><strong>{{ .Title | replaceRE `^\d{4}-\d{2}-\d{2}\s+` "" }}</strong></a>{{ end }}
+    {{ with .NextInSection }}<a class="pager-link next" href="{{ .RelPermalink }}"><span>Newer →</span><strong>{{ .Title | replaceRE `^\d{4}-\d{2}-\d{2}\s+` "" }}</strong></a>{{ end }}
+  </nav>
+  <div class="cta">
+    <div><h2>Done reviewing?</h2><p>Read another chapter, say it out loud, and add the next session.</p></div>
+    <a class="btn" href="{{ site.Params.addSessionURL }}">Add a session</a>
+  </div>
+</article>
+{{ end }}

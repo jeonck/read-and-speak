@@ -1,0 +1,15 @@
+{{/* A session row: date · title · tags · reading time */}}
+<a class="row" href="{{ .RelPermalink }}">
+  <time class="row-date" datetime="{{ .Date.Format "2006-01-02" }}">
+    <span class="d">{{ .Date.Format "02" }}</span>
+    <span class="m">{{ .Date.Format "Jan 2006" }}</span>
+  </time>
+  <span class="row-main">
+    <span class="row-title">{{ .Title | replaceRE `^\d{4}-\d{2}-\d{2}\s+` "" }}</span>
+    <span class="row-meta">
+      {{ range first 3 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+      <span class="read">{{ .ReadingTime }} min read</span>
+    </span>
+  </span>
+  <span class="row-arrow" aria-hidden="true">→</span>
+</a>

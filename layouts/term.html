@@ -1,0 +1,8 @@
+{{ define "main" }}
+<header class="page-head" id="top">
+  <p class="eyebrow"><a href="{{ "tags/" | relURL }}">Topics</a> /</p>
+  <h1>{{ .Title | lower }}</h1>
+  <p class="lede">{{ len .Pages }} session{{ if ne (len .Pages) 1 }}s{{ end }} tagged with this topic.</p>
+</header>
+<div class="rows">{{ range .Pages.ByDate.Reverse }}{{ partial "row.html" . }}{{ end }}</div>
+{{ end }}

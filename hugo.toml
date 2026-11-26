@@ -1,46 +1,21 @@
 baseURL = 'https://jeonck.github.io/read-and-speak/'
 locale = 'en-us'
 title = 'Read & Speak'
-theme = 'PaperMod'
-paginate = 10
+
+[pagination]
+  pagerSize = 10
 
 [params]
-  env = 'production'
-  title = 'Read & Speak'
   description = 'Read for 30 minutes, say it out loud, and get the English right — one session at a time.'
   author = 'jeonck'
-  defaultTheme = 'auto'
-  disableThemeToggle = false
-  ShowReadingTime = true
-  ShowShareButtons = true
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = true
-  ShowCodeCopyButtons = true
-  ShowWordCount = true
-  ShowRssButtonInSectionTermList = true
-  UseHugoToc = true
-  disableSpecial1stPost = false
-  disableScrollToTop = false
-  comments = false
-  hidemeta = false
-  hideSummary = false
-  showtoc = false
-  tocopen = false
-
-  [params.homeInfoParams]
-    Title = 'Read it. Say it. Say it better.'
-    Content = 'Every reading session, turned into a study post: your best sentences, natural corrections, and a quick quiz.'
-
-  [[params.socialIcons]]
-    name = 'github'
-    url = 'https://github.com/jeonck/read-and-speak'
+  github = 'https://github.com/jeonck/read-and-speak'
+  addSessionURL = 'https://github.com/jeonck/read-and-speak/edit/main/input/script.md'
+  heroTitleLine1 = 'Read it.'
+  heroTitleLine2 = 'Say it.'
+  heroTitleLine3 = 'Say it better.'
+  heroText = 'Every reading session, turned into a study post: your best sentences, natural corrections, and a quick quiz.'
 
 [menu]
-  [[menu.main]]
-    identifier = 'input'
-    name = 'Add a session'
-    url = 'https://github.com/jeonck/read-and-speak/edit/main/input/script.md'
-    weight = 5
   [[menu.main]]
     identifier = 'posts'
     name = 'Sessions'
@@ -57,11 +32,18 @@ paginate = 10
     url = '/search/'
     weight = 30
 
+[taxonomies]
+  tag = 'tags'
+
 [outputs]
   home = ['HTML', 'RSS', 'JSON']
 
-# Quiz sections use raw HTML <details>/<summary> accordions in generated posts
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
+      # raw <details> quiz toggles; hardWraps keeps the ❌/✅/💡 lines of "Say It Better" on separate lines
       unsafe = true
+      hardWraps = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 2

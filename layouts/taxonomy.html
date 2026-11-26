@@ -1,0 +1,10 @@
+{{ define "main" }}
+<header class="page-head" id="top">
+  <p class="eyebrow">Browse by</p>
+  <h1>Topics</h1>
+  <p class="lede">Idioms, vocabulary and themes from every session.</p>
+</header>
+<div class="chips chips-lg">
+  {{ range .Data.Terms.Alphabetical }}<a class="chip" href="{{ .Page.RelPermalink }}">{{ .Page.Title | lower }}<span>{{ .Count }}</span></a>{{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,15 @@
+{{ define "main" }}
+<header class="page-head" id="top">
+  <p class="eyebrow">Archive</p>
+  <h1>{{ .Title }}</h1>
+  <p class="lede">{{ len .Pages }} session{{ if ne (len .Pages) 1 }}s{{ end }} so far. Everything you’ve read and said, ready to review.</p>
+</header>
+{{ range .Pages.GroupByDate "January 2006" }}
+<section class="month">
+  <h2 class="month-title">{{ .Key }}</h2>
+  <div class="rows">{{ range .Pages }}{{ partial "row.html" . }}{{ end }}</div>
+</section>
+{{ else }}
+<div class="empty"><h3>No sessions yet</h3><p>Add a transcript to publish your first study post.</p><a class="btn" href="{{ site.Params.addSessionURL }}">Add a session</a></div>
+{{ end }}
+{{ end }}

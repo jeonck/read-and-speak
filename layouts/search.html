@@ -1,0 +1,13 @@
+{{ define "main" }}
+<header class="page-head" id="top">
+  <p class="eyebrow">Find anything</p>
+  <h1>{{ .Title }}</h1>
+</header>
+{{ $json := site.Home.OutputFormats.Get "json" }}
+<div class="search" data-index="{{ with $json }}{{ .RelPermalink }}{{ end }}">
+  <label class="sr" for="q">Search sessions</label>
+  <input id="q" type="search" placeholder="{{ .Params.placeholder }}" autocomplete="off" disabled>
+  <p class="search-status" id="search-status" aria-live="polite">Loading…</p>
+  <ul class="results" id="results"></ul>
+</div>
+{{ end }}

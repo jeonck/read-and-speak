@@ -10,6 +10,8 @@ on:
       - "hugo.toml"
       - "archetypes/**"
       - "assets/**"
+      - "layouts/**"
+      - "static/**"
 
 permissions:
   contents: write

@@ -116,14 +116,15 @@ confirm it works.
 | `pipeline/state.json` | hashes of published sessions (prevents duplicates) |
 | `content/posts/` | generated study posts |
 | `.github/workflows/daily.yml` | push hook + manual generate/deploy workflow (no schedule) |
-| `themes/PaperMod` | Hugo theme (vendored as regular files) |
-| `assets/css/extended/cards.css` | card-grid layout + PaperMod spacing fix |
+| `layouts/` | custom Hugo templates (home, session archive, post, topics, search, 404) |
+| `assets/css/main.css` | the whole design: black / paper / lime palette, light + dark |
+| `assets/js/app.js` | theme toggle + client-side search |
 | `static/CNAME` | (optional) for a custom domain |
 
 ## Test locally
 
 ```bash
-hugo server -D                           # http://localhost:1313/
+hugo server -D                           # http://localhost:1313/ (needs Hugo extended ≥ 0.146)
 python3 pipeline/generate.py --dry-run   # shows the result without creating files
 ```
 

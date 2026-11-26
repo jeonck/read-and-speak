@@ -1,6 +1,5 @@
 ---
 title: "Search"
 layout: "search"
-summary: "search"
-placeholder: "Type to search..."
+placeholder: "Search idioms, words, corrections…"
 ---

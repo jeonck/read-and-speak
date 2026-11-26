@@ -1,0 +1,52 @@
+{{ define "main" }}
+{{ $sessions := where site.RegularPages "Section" "posts" }}
+<section class="hero" id="top">
+  <p class="eyebrow">English speaking practice</p>
+  <h1 class="hero-title">
+    <span>{{ site.Params.heroTitleLine1 }}</span>
+    <span>{{ site.Params.heroTitleLine2 }}</span>
+    <span><mark>{{ site.Params.heroTitleLine3 }}</mark></span>
+  </h1>
+  <p class="lede">{{ site.Params.heroText }}</p>
+  <div class="hero-actions">
+    <a class="btn" href="{{ site.Params.addSessionURL }}">Add a session</a>
+    <a class="btn btn-ghost" href="{{ "posts/" | relURL }}">Browse {{ len $sessions }} session{{ if ne (len $sessions) 1 }}s{{ end }}</a>
+  </div>
+</section>
+
+<section class="steps" aria-label="How a session works">
+  <ol>
+    <li><span class="n">01</span><h2>Read</h2><p>About 30 minutes in a book, with your reading partner.</p></li>
+    <li><span class="n">02</span><h2>Talk</h2><p>Explain out loud what you read. Dictate it on your iPhone.</p></li>
+    <li><span class="n">03</span><h2>Paste</h2><p>Drop the transcript into the repo and save. That’s it.</p></li>
+    <li><span class="n">04</span><h2>Review</h2><p>Check the corrections, take the quiz, re-read your diary.</p></li>
+  </ol>
+</section>
+
+<section class="block">
+  <div class="block-head">
+    <h2>Latest sessions</h2>
+    <a class="link-arrow" href="{{ "posts/" | relURL }}">All sessions →</a>
+  </div>
+  {{ if $sessions }}
+  <div class="rows">
+    {{ range first 6 $sessions.ByDate.Reverse }}{{ partial "row.html" . }}{{ end }}
+  </div>
+  {{ else }}
+  <div class="empty">
+    <h3>No sessions yet</h3>
+    <p>Add your first transcript and your study post will appear here in a few minutes.</p>
+    <a class="btn" href="{{ site.Params.addSessionURL }}">Add your first session</a>
+  </div>
+  {{ end }}
+</section>
+
+{{ with site.Taxonomies.tags }}
+<section class="block">
+  <div class="block-head"><h2>Topics</h2><a class="link-arrow" href="{{ "tags/" | relURL }}">All topics →</a></div>
+  <div class="chips">
+    {{ range first 16 .ByCount }}<a class="chip" href="{{ .Page.RelPermalink }}">{{ .Page.Title | lower }}<span>{{ .Count }}</span></a>{{ end }}
+  </div>
+</section>
+{{ end }}
+{{ end }}
