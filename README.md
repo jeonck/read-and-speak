@@ -83,8 +83,11 @@ handles that on purpose:
   long: up to 5–7 idioms / 12–18 corrections).
 - **Three kinds of speech** — reading the book aloud (used for idioms and vocabulary,
   never for corrections, since dictation garbles it), explaining the book in your
-  own words (the only source for *Say It Better*), and talk about the app or
-  recording (ignored).
+  own words (the only source for *Say It Better*), your partner's turns (their
+  questions, advice and explanations appear in the recap as 💬 *Partner:* lines, and
+  their phrasing can supply idioms and vocabulary — they are never "corrected"),
+  and talk about the app or recording (ignored). Dictation has no speaker labels, so
+  the model infers who is speaking from context.
 - **Whole-session coverage** — the *Session Overview* ends with a **What we covered**
   list that walks through the session in order, and items are drawn from every part.
 - **Model** — the default is `claude-sonnet-5-5`. Set `CLAUDE_MODEL` to change it.

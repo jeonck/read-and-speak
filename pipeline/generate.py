@@ -86,10 +86,11 @@ for context, not as content to quote.{note} Analyze it and produce study notes. 
 this format, no other text:
 
 {{"title": "Short English title capturing the session's main topic",
- "summary": "3-4 sentence English overview of the WHOLE session, beginning to end",
+ "summary": "3-4 sentence English overview of the WHOLE session, beginning to end, covering both the learner and the speaking partner",
  "segments": [
    {{"label": "short label, e.g. 'Reading aloud: the nest scene' or 'Talking about the book'",
-     "recap": "1-2 sentence English recap of what happened in this part"}}
+     "recap": "1-2 sentence English recap of what the learner said or read in this part",
+     "partner": "1 sentence on what the speaking partner said, asked, explained or advised in this part ('' if the partner said nothing meaningful here)"}}
  ],
  "idioms": [
    {{"idiom": "idiom or expression used or worth learning from this session",
@@ -132,15 +133,25 @@ speech. Tell them apart:
      learner's own speech. Dictation errors inside it are NOT learner mistakes, so
      never put it under "corrections" and never quote garbled dictation as
      vocabulary. Its idioms and vocabulary are excellent teaching material, though.
- (b) the learner EXPLAINING or RETELLING the book in their own words and discussing
-     it with the partner — the ONLY source for "corrections".
+ (b) the learner EXPLAINING or RETELLING the book in their own words — the ONLY
+     source for "corrections".
+ (b2) the SPEAKING PARTNER's turns: questions, advice, explanations, reactions
+     ("Then if you understand a sentence, you can explain it to me", a tip about
+     comprehensible input, a guess at a word's meaning). Their content is part of the
+     session: record it in each segment's "partner" field and in the summary, and
+     mine their natural phrasing for idioms and vocabulary too. Do not correct the
+     partner's sentences.
+ The transcript has NO speaker labels. Infer who is speaking from context (who
+ reads, who asks, who answers, who gives advice). If you cannot tell, treat the line
+ as the learner's for recap purposes but leave it out of "corrections".
  (c) off-topic talk about the app, website, domain name, recording tool, equipment
      or scheduling, plus stray words like "Microphone" — ignore it completely and
      never mention it in the notes.
 Cover the WHOLE transcript from beginning to end. Draw idioms, vocabulary and
 corrections from every part, not just the opening, and prefer the most useful
 items over the first ones you meet. "segments" must walk through the session in
-order (type (c) talk gets no segment) so the reader can see everything covered.
+order (type (c) talk gets no segment) so the reader can see everything covered,
+including what the partner contributed.
 
 Requirements: {n_idioms} idioms (each with exactly 2 examples), {n_vocab} vocabulary
 items, {n_corr} corrections drawn from what the learner actually said in their own
@@ -277,7 +288,8 @@ def parse_result(text: str) -> dict | None:
         data[key] = value if isinstance(value, list) else []
     segments = data.get("segments") or []
     data["segments"] = [
-        {"label": str(seg.get("label", "")).strip(), "recap": str(seg.get("recap", "")).strip()}
+        {"label": str(seg.get("label", "")).strip(), "recap": str(seg.get("recap", "")).strip(),
+         "partner": str(seg.get("partner") or "").strip()}
         for seg in segments
         if isinstance(seg, dict) and str(seg.get("recap", "")).strip()
     ] if isinstance(segments, list) else []
@@ -401,10 +413,12 @@ def write_post(sentence: str, result: dict, date: datetime, source: str | None =
     else:
         overview = f"## {HEADING_INPUT}\n\n{result['summary']}\n"
         if result.get("segments"):
-            items = "\n".join(
-                f"- **{seg['label']}** — {seg['recap']}" if seg["label"] else f"- {seg['recap']}"
-                for seg in result["segments"]
-            )
+            def seg_line(seg):
+                line = f"- **{seg['label']}** — {seg['recap']}" if seg["label"] else f"- {seg['recap']}"
+                if seg.get("partner"):
+                    line += f"\n  - 💬 *Partner:* {seg['partner']}"
+                return line
+            items = "\n".join(seg_line(seg) for seg in result["segments"])
             overview += f"\n**What we covered**\n\n{items}\n"
         sections.append(overview)
 
