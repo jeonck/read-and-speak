@@ -28,8 +28,8 @@
     that raw commit clean too.
 -->
 ```
-Book: The Magic Finger by Roald Dahl
-Pages read: pp. 1–18
+Book: The Magic Finger by Roald Dahl, Dragon storm
 
-Today I read The Magic Finger by Roald Dahl. The story is about a little girl. She has a magic finger, and when she gets angry, her finger starts to tingle, and she can put a magic on people. The Gregg family lives next door, and they like hunting ducks every Saturday. The girl doesn't like it because she loves animals. One day she got very angry and she put a spell to the Gregg family. Next morning, the family woke up and they had wings instead of arms, and they were very small. I think the main point is about how we treat animals. It made me think about my childhood, when I saw hunters in Korea. The most interesting part is when the ducks come back with guns and the family has to hide in the house. I was surprising how funny and also serious the story is at the same time. I want to read more tomorrow to know how the family change back to normal.
+
+[Today I read The Magic Finger by Roald Dahl. The story is about a little girl. She has a magic finger, and when she gets angry, her finger starts to tingle, and she can put a magic on people. The Gregg family lives next door, and they like hunting ducks every Saturday. The girl doesn't like it because she loves animals. One day she got very angry and she put a spell to the Gregg family. Next morning, the family woke up and they had wings instead of arms, and they were very small. I think the main point is about how we treat animals. It made me think about my childhood, when I saw hunters in Korea. The most interesting part is when the ducks come back with guns and the family has to hide in the house. I was surprising how funny and also serious the story is at the same time. I want to read more tomorrow to know how the family change back to normal.](https://readandspeak.metacog.co.kr/)
 ```
