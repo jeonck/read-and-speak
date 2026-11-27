@@ -72,6 +72,23 @@ input stays put so you can retry.) An already-published session is never re-post
   not erase that earlier commit). **Before pasting, replace real names with a
   placeholder like "my reading partner".**
 
+## Long sessions
+
+A 30-minute session can be 3,000+ words and mix several kinds of speech. The pipeline
+handles that on purpose:
+
+- **Cleaning** — stray `Microphone` lines and blank-line runs from dictation are removed.
+- **Scaled output** — the number of idioms, vocabulary items, corrections and quiz
+  questions grows with the transcript length (short: 2–4 idioms / 5–10 corrections;
+  long: up to 5–7 idioms / 12–18 corrections).
+- **Three kinds of speech** — reading the book aloud (used for idioms and vocabulary,
+  never for corrections, since dictation garbles it), explaining the book in your
+  own words (the only source for *Say It Better*), and talk about the app or
+  recording (ignored).
+- **Whole-session coverage** — the *Session Overview* ends with a **What we covered**
+  list that walks through the session in order, and items are drawn from every part.
+- **Model** — the default is `claude-sonnet-5-5`. Set `CLAUDE_MODEL` to change it.
+
 ## Days with no session — idiom mini lesson
 
 If you run the workflow manually with an empty code block, it picks a

@@ -22,7 +22,7 @@ Env:
     CLAUDE_CODE_OAUTH_TOKEN  claude-code 백엔드 CI 인증 (claude setup-token으로 발급,
                              로컬은 claude 로그인 세션 사용)
     ANTHROPIC_API_KEY        api 백엔드 필수
-    CLAUDE_MODEL             생성 모델 (기본 claude-haiku-5-5)
+    CLAUDE_MODEL             생성 모델 (기본 claude-sonnet-5-5 — 긴 세션 전체를 반영하려면 haiku보다 권장)
 """
 
 import argparse
@@ -86,7 +86,11 @@ for context, not as content to quote.{note} Analyze it and produce study notes. 
 this format, no other text:
 
 {{"title": "Short English title capturing the session's main topic",
- "summary": "2-3 sentence English overview of what was discussed in the session",
+ "summary": "3-4 sentence English overview of the WHOLE session, beginning to end",
+ "segments": [
+   {{"label": "short label, e.g. 'Reading aloud: the nest scene' or 'Talking about the book'",
+     "recap": "1-2 sentence English recap of what happened in this part"}}
+ ],
  "idioms": [
    {{"idiom": "idiom or expression used or worth learning from this session",
      "meaning": "plain-English explanation",
@@ -122,16 +126,33 @@ and enough everyday context to make examples natural (e.g. "a recent trip" inste
 naming the city and travel companion if those aren't needed for the language point). \
 When in doubt, generalize rather than omit the language teaching value.
 
-Requirements: 2-4 idioms (each with exactly 2 examples), 4-8 vocabulary items,
-5-10 corrections drawn from what learners actually said (correct the language only —
-do not attribute corrections to a named speaker).
+Long-session rules: a real session can run 30+ minutes and mixes several kinds of
+speech. Tell them apart:
+ (a) the learner READING BOOK PASSAGES ALOUD — this is the book's text, not the
+     learner's own speech. Dictation errors inside it are NOT learner mistakes, so
+     never put it under "corrections" and never quote garbled dictation as
+     vocabulary. Its idioms and vocabulary are excellent teaching material, though.
+ (b) the learner EXPLAINING or RETELLING the book in their own words and discussing
+     it with the partner — the ONLY source for "corrections".
+ (c) off-topic talk about the app, website, domain name, recording tool, equipment
+     or scheduling, plus stray words like "Microphone" — ignore it completely and
+     never mention it in the notes.
+Cover the WHOLE transcript from beginning to end. Draw idioms, vocabulary and
+corrections from every part, not just the opening, and prefer the most useful
+items over the first ones you meet. "segments" must walk through the session in
+order (type (c) talk gets no segment) so the reader can see everything covered.
+
+Requirements: {n_idioms} idioms (each with exactly 2 examples), {n_vocab} vocabulary
+items, {n_corr} corrections drawn from what the learner actually said in their own
+words (correct the language only — do not attribute corrections to a named
+speaker), {n_segments} segments.
 Diary rules: the diary is ONE coherent entry about ONE small everyday event
 (e.g. walking past an old neighborhood, a dinner invitation) — not a list of
 disconnected sentences. Tell it as a natural mini-story with a beginning and
 end, weaving in 2-4 of the studied idioms/vocabulary only where they genuinely
 fit; wrap each studied expression in **double asterisks** so it stands out.
 Never force in more expressions at the cost of natural flow.
-Quiz rules (4-6 questions): every question is FILL-IN-THE-BLANK — a natural
+Quiz rules ({n_quiz} questions): every question is FILL-IN-THE-BLANK — a natural
 sentence with "____" marking the blank. Every option (3-4 per question) MUST be
 taken verbatim from this lesson's "idioms" or "vocabulary" entries — never invent
 outside words, so all distractors are plausible items the learner just studied.
@@ -254,6 +275,12 @@ def parse_result(text: str) -> dict | None:
     for key in ("idioms", "vocabulary", "corrections", "quiz"):
         value = data.get(key) or []
         data[key] = value if isinstance(value, list) else []
+    segments = data.get("segments") or []
+    data["segments"] = [
+        {"label": str(seg.get("label", "")).strip(), "recap": str(seg.get("recap", "")).strip()}
+        for seg in segments
+        if isinstance(seg, dict) and str(seg.get("recap", "")).strip()
+    ] if isinstance(segments, list) else []
     diary = data.get("diary") or ""
     if isinstance(diary, list):  # 모델이 옛 형식(문장 목록)으로 답한 경우 이어붙임
         diary = " ".join(str(d).strip() for d in diary)
@@ -265,9 +292,31 @@ def parse_result(text: str) -> dict | None:
     return data
 
 
+def clean_transcript(text: str) -> str:
+    """받아쓰기 잡음 제거: 'Microphone' 단독 줄, 줄 끝 공백, 연속 빈 줄."""
+    lines = [ln.rstrip() for ln in text.splitlines()
+             if not re.fullmatch(r"\s*microphone\s*", ln, flags=re.IGNORECASE)]
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
+
+
+def target_counts(word_count: int) -> dict:
+    """스크립트 길이에 비례해 각 섹션의 목표 개수를 정한다 — 긴 세션이 짧은 세션과
+    같은 분량으로 압축되지 않도록."""
+    if word_count < 300:
+        return dict(n_idioms="2-4", n_vocab="4-8", n_corr="5-10", n_quiz="4-6", n_segments="1-2")
+    if word_count < 1000:
+        return dict(n_idioms="3-5", n_vocab="6-10", n_corr="8-12", n_quiz="5-7", n_segments="2-4")
+    if word_count < 2500:
+        return dict(n_idioms="4-6", n_vocab="8-12", n_corr="10-15", n_quiz="6-8", n_segments="4-6")
+    return dict(n_idioms="5-7", n_vocab="10-14", n_corr="12-18", n_quiz="7-10", n_segments="5-8")
+
+
 def build_prompt(sentence: str, source: str | None) -> str:
     note = QUOTE_NOTE if source else ""
-    return GENERATE_PROMPT.format(sentence=sentence, note=note)
+    if not source:
+        sentence = clean_transcript(sentence)
+    counts = target_counts(len(sentence.split()))
+    return GENERATE_PROMPT.format(sentence=sentence, note=note, **counts)
 
 
 def generate_api(client, model: str, sentence: str, source: str | None = None) -> dict | None:
@@ -276,7 +325,7 @@ def generate_api(client, model: str, sentence: str, source: str | None = None) -
         try:
             response = client.messages.create(
                 model=model,
-                max_tokens=8000,
+                max_tokens=16000,
                 system=SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -303,7 +352,7 @@ def generate_cli(model: str, sentence: str, source: str | None = None) -> dict |
            "--output-format", "text", "--append-system-prompt", SYSTEM_PROMPT]
     for attempt in (1, 2):
         try:
-            result = subprocess.run(cmd, input=prompt, env=env, timeout=360,
+            result = subprocess.run(cmd, input=prompt, env=env, timeout=600,
                                      capture_output=True, text=True)
         except subprocess.TimeoutExpired:
             log(f"  CLI 타임아웃 (시도 {attempt})")
@@ -350,7 +399,14 @@ def write_post(sentence: str, result: dict, date: datetime, source: str | None =
     if source:
         sections.append(f"## {HEADING_INPUT_QUOTE}\n\n> **{sentence}**\n\n{result['summary']}\n")
     else:
-        sections.append(f"## {HEADING_INPUT}\n\n{result['summary']}\n")
+        overview = f"## {HEADING_INPUT}\n\n{result['summary']}\n"
+        if result.get("segments"):
+            items = "\n".join(
+                f"- **{seg['label']}** — {seg['recap']}" if seg["label"] else f"- {seg['recap']}"
+                for seg in result["segments"]
+            )
+            overview += f"\n**What we covered**\n\n{items}\n"
+        sections.append(overview)
 
     if result["idioms"]:
         lines = [f"## {HEADING_IDIOMS}\n"]
@@ -459,7 +515,7 @@ def main() -> int:
         log(f"오류: 알 수 없는 JUDGE_BACKEND={backend!r} (claude-code | api)")
         return 1
 
-    model = os.environ.get("CLAUDE_MODEL", "claude-haiku-5-5")
+    model = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
     today = datetime.now(CHICAGO).date()
     sentences = read_sentences()
     queue = build_queue(sentences, today)
@@ -487,7 +543,7 @@ def main() -> int:
             continue
 
         preview = sentence if len(sentence) <= 80 else sentence[:80] + "…"
-        log(f"\n오늘의 항목 ({len(sentence)}자): {preview}")
+        log(f"\n오늘의 항목 ({len(sentence)}자, {len(sentence.split())}단어): {preview}")
         try:
             if backend == "claude-code":
                 result = generate_cli(model, sentence, source)
